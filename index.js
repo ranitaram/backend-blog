@@ -1,6 +1,7 @@
 const {connection} = require("./database/connection");
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config();
 //inicializara la app
 console.log("App de node arracada");
 
@@ -9,7 +10,7 @@ connection();
 
 //crear servidor de node
 const app = express();
-const port = 4201;
+
 
 //configurar el cors
 app.use(cors());
@@ -26,6 +27,6 @@ app.use("/api",rutas_articulo);
 
 
 //crear el servidor y escuchar peticiones
-app.listen(port, ()=> {
-    console.log('servidor corriendo en el puerto:'+port);
+app.listen(process.env.PORT, ()=> {
+    console.log('servidor corriendo en el puerto:'+process.env.PORT);
 });
