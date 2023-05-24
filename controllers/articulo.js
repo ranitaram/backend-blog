@@ -4,6 +4,7 @@ const {validarArticulo} = require("../helpers/validar");
 const Articulo = require("../models/Articulos");
 const fs = require("fs");
 const path = require("path");
+const { generarJWT } = require('../helpers/jwt');
 
 
 const prueba = (req, res)=> {
@@ -30,14 +31,15 @@ const crear = async (req, res) => {
     // Crear el objeto a guardar
     const articulo = new Articulo(parametros); //de forma automatica
    // articulo.titulo = parametros.titulo; DE FORMA MANUAL
-  
+   const token = await generarJWT(articulo.id);
     // Guardarlo utilizando promesas
     try {
       const articuloGuardado = await articulo.save();
       return res.status(200).json({
         status: "exito",
         articulo: articuloGuardado,
-        mensaje: "Artículo guardado con éxito!!"
+        mensaje: "Artículo guardado con éxito!!",
+        token
       });
     } catch (error) {
       return res.status(400).json({
@@ -58,16 +60,19 @@ const crear = async (req, res) => {
         if (req.params.ultimos) {
              articulos = await Articulo.find({})
             .sort({fecha: -1})
-            .limit(2);
+            .limit(4);
             
         } 
+
+        const token = await generarJWT(articulos.id);
       
       return res.status(200).json({
           //con req.params recogemos los parametros de la url
         status: "success",
         parametro: req.params.ultimos,
         contador: articulos.length,
-        articulos: articulos || []
+        articulos: articulos || [],
+        token      
       });
     } catch (error) {
       return res.status(500).json({
@@ -103,15 +108,17 @@ const crear = async (req, res) => {
 
 const borrar = async (req, res)=> {
     try {
-       let articulo_id = req.params.id;
-        let articulo = await Articulo.findOneAndDelete({
-            _id: articulo_id
-        });
+      let articulo_id = req.params.id;
+      let articulo = await Articulo.findOneAndDelete({
+        _id: articulo_id
+      });
+      const token = await generarJWT(articulo._id);
         if (articulo) {
             return res.status(200).json({
                 status: "success",
                 articulo: articulo,
-                message: "Artículo borrado"
+                message: "Artículo borrado",
+                token
               });
         } else {
             return res.status(500).json({
@@ -145,13 +152,15 @@ const editar = async (req, res) => {
           mensaje: "Faltan datos por enviar"
         });
       }
+      const token = await generarJWT(parametros.articuloId);
       //buscar y actualizar articulo
      let articuloActualizado = await Articulo.findByIdAndUpdate(
          articuloId,
          parametros,
          //{ new: true } Esto nos permite obtener el artículo actualizado 
          //directamente en  la variable articuloActualizado sin usar un callback.
-         {new: true}
+         {new: true},
+         token
         );
 
         if (!articuloActualizado) {
