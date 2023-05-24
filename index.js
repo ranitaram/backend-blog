@@ -21,9 +21,11 @@ app.use(express.urlencoded({extended: true})); //form-urlencoded recibe los dato
 
 //rutas
 const rutas_articulo = require("./routes/articulo");
+const rutas_usuarios = require('./routes/usuarios')
 
 //cargar rutas
 app.use("/api",rutas_articulo);
+app.use('/api',rutas_usuarios);
 
 
 //crear el servidor y escuchar peticiones
