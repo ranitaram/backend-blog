@@ -1,14 +1,14 @@
 const express = require("express");
-const multer = require("multer");
 const {check} = require('express-validator');
 const UsuariosController = require("../controllers/usuarios");
 const router = express.Router();
 const {validarCampos} = require('../middleware/validar-campos');
 
 
-router.get("/usuario", UsuariosController.getUsuarios);
+router.get("/", UsuariosController.getUsuarios);
 
-router.post("/usuario/crear",
+
+router.post("/crear",
 [
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'La contraseña es obligatoria').not().isEmpty(),
@@ -17,7 +17,7 @@ router.post("/usuario/crear",
 
 ], UsuariosController.crearUsuario);
 
-router.put("/usuario/actualizar/:id",[
+router.put("/actualizar/:id",[
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('email', 'El email es obligatorio').isEmail(),
     check('role', 'El role es obligatorio'),
@@ -26,7 +26,7 @@ router.put("/usuario/actualizar/:id",[
 UsuariosController.actualizarUsuario);
 
 
-router.delete('/usuario/borrar/:id', UsuariosController.borrarUsuario);
+router.delete('/borrar/:id', UsuariosController.borrarUsuario);
 
 
 module.exports = router;
