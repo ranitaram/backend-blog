@@ -223,16 +223,17 @@ const subir = async (req, res) => {
                         imagen: req.file.filename
                     };
 
-        
-              //buscar y actualizar articulo
-             let articuloActualizado = await Articulo.findByIdAndUpdate(
-                 articuloId,
-                 updateObj,
-                 //{ new: true } Esto nos permite obtener el artículo actualizado 
-                 //directamente en  la variable articuloActualizado sin usar un callback.
-                 {new: true}
-                );
-        
+                    //buscar y actualizar articulo
+                    let articuloActualizado = await Articulo.findByIdAndUpdate(
+                      articuloId,
+                      updateObj,
+                      //{ new: true } Esto nos permite obtener el artículo actualizado 
+                      //directamente en  la variable articuloActualizado sin usar un callback.
+                      {new: true},
+                      
+                      );
+                      
+                      const token = await generarJWT(articuloActualizado.articuloId);
                 if (!articuloActualizado) {
                     return res.status(500).json({
                       status: "error",
@@ -245,7 +246,8 @@ const subir = async (req, res) => {
                 status: "success",
                 articulo: articuloActualizado,
                 fichero: req.file,
-                message: "Artículo actualizado con éxito"
+                message: "Artículo actualizado con éxito",
+                token
               });
             } catch (error) {
                 return res.status(500).json({
