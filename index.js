@@ -15,6 +15,9 @@ const app = express();
 //configurar el cors
 app.use(cors());
 
+//carpeta pública
+app.use(express.static('public'));
+
 //convertir el body a objeto js
 app.use(express.json());//recibir datos con content.type app/json
 app.use(express.urlencoded({extended: true})); //form-urlencoded recibe los datos 
