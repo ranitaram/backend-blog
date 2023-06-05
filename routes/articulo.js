@@ -32,7 +32,7 @@ router.post("/crear",[
 // el single se usa para subir solo un archivo
 router.post("/subir-imagen/:id", [subidas.single("file0"), validarJWT], ArticuloController.subir);
 
-router.get("/:ultimos?",[validarJWT], ArticuloController.listarArticulos);
+router.get("/:ultimos?", ArticuloController.listarArticulos);
 router.get("/uno/:id", ArticuloController.uno);
 router.get("/imagen/:fichero", ArticuloController.imagen);
 router.get("/buscar/:busqueda", ArticuloController.buscador);

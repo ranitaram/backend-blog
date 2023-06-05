@@ -60,11 +60,11 @@ const crear = async (req, res) => {
         if (req.params.ultimos) {
              articulos = await Articulo.find({})
             .sort({fecha: -1})
-            .limit(4);
+            .limit(10);
             
         } 
 
-        const token = await generarJWT(articulos.id);
+       // const token = await generarJWT(articulos.id);
       
       return res.status(200).json({
           //con req.params recogemos los parametros de la url
@@ -72,7 +72,7 @@ const crear = async (req, res) => {
         parametro: req.params.ultimos,
         contador: articulos.length,
         articulos: articulos || [],
-        token      
+        //token      
       });
     } catch (error) {
       return res.status(500).json({
