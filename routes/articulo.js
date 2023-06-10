@@ -31,6 +31,7 @@ router.post("/crear",[
 
 // el single se usa para subir solo un archivo
 router.post("/subir-imagen/:id", [subidas.single("file0"), validarJWT], ArticuloController.subir);
+router.post("/subir-servidor/:id", [subidas.single("file1"), validarJWT], ArticuloController.subirACloudinary);
 
 router.get("/:ultimos?", ArticuloController.listarArticulos);
 router.get("/uno/:id", ArticuloController.uno);

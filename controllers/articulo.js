@@ -5,6 +5,9 @@ const Articulo = require("../models/Articulos");
 const fs = require("fs");
 const path = require("path");
 const { generarJWT } = require('../helpers/jwt');
+const cloudinary = require('cloudinary').v2
+cloudinary.config(process.env.CLOUDINARY_URL);
+
 
 
 const prueba = (req, res)=> {
@@ -259,6 +262,88 @@ const subir = async (req, res) => {
 
         }
 };
+const subirACloudinary = async (req, res) => {
+
+  //limpiar imagenes previas
+
+
+
+
+
+  
+    //recoger el fichero de la imagen subido
+    if (!req.file && !req.files) {
+        return res.status(404).json({
+            status: "error",
+            mensaje: "Peticion invalida"
+        });
+    }
+    //Nombre del archivo
+    let archivo = req.file.originalname;
+    //extension del archivo
+    let archivo_split = archivo.split(".");
+    let extension = archivo_split[1];
+    //Comprobar extension correcta
+    if (
+        extension != "png" && 
+        extension != "jpg" && 
+        extension != "jpeg" && 
+        extension != "gif"
+        ){
+            //borrar archivo y dar respuesta
+            fs.unlink(req.file.path, (error)=>{
+                return res.status(400).json({
+                    status: "error",
+                    mensaje: "Imagen invalida"
+                });
+            });
+            console.log(req.files.archivo);
+        }else{
+            try {
+                //recoger el id
+                let articuloId = req.params.id;
+
+                // Construir objeto con la propiedad imagen
+                    let updateObj = {
+                        imagen: req.file.filename
+                    };
+
+                    //buscar y actualizar articulo
+                    let articuloActualizado = await Articulo.findByIdAndUpdate(
+                      articuloId,
+                      updateObj,
+                      //{ new: true } Esto nos permite obtener el artículo actualizado 
+                      //directamente en  la variable articuloActualizado sin usar un callback.
+                      {new: true},
+                      
+                      );
+                      
+                      const token = await generarJWT(articuloActualizado.articuloId);
+                if (!articuloActualizado) {
+                    return res.status(500).json({
+                      status: "error",
+                      message: "Error al actualizar el artículo"
+                    });
+                  }
+        
+                   // Devolver respuesta 
+            return res.status(200).json({
+                status: "success",
+                articulo: articuloActualizado,
+                fichero: req.file,
+                message: "Artículo actualizado con éxito",
+                token
+              });
+            } catch (error) {
+                return res.status(500).json({
+                    status: "error",
+                    mensaje: "Error en el servidor"
+                  });
+            
+            }
+
+        }
+};
 
 const imagen = async (req, res) => {
     try {
@@ -320,6 +405,7 @@ module.exports = {
     editar,
     subir,
     imagen,
-    buscador
+    buscador,
+    subirACloudinary
 }
 
