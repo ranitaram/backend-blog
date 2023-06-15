@@ -67,6 +67,12 @@ const createOrder = async (req, res = response) => {
 }
 
 const createSession = async (req, res = response) => {
+
+    //MODO DESARROLLO
+    // success_url: 'http://localhost:4600/payments/success',
+    //cancel_url: 'http://localhost:4600/payments/cancel'
+
+
     const session = await  stripe.checkout.sessions.create({
         line_items: [
             {
@@ -82,8 +88,8 @@ const createSession = async (req, res = response) => {
             }
         ],
         mode: 'payment',
-        success_url: 'http://localhost:4600/payments/success',
-        cancel_url: 'http://localhost:4600/payments/cancel'
+        success_url: 'https://ramses.pro/payments/success',
+        cancel_url: 'https://ramses.pro/payments/cancel'
     })
 
     return res.json(session)
@@ -105,8 +111,8 @@ const createBasico = async (req, res = response) => {
             }
         ],
         mode: 'payment',
-        success_url: 'http://localhost:4600/payments/success',
-        cancel_url: 'http://localhost:4600/payments/cancel'
+        success_url: 'https://ramses.pro/payments/success',
+        cancel_url: 'https://ramses.pro/payments/cancel'
     })
     return res.json(sessionBasico);
 }
@@ -127,8 +133,8 @@ const createStandar = async (req, res = response) => {
             }
         ],
         mode: 'payment',
-        success_url: 'http://localhost:4600/payments/success',
-        cancel_url: 'http://localhost:4600/payments/cancel'
+        success_url: 'https://ramses.pro/payments/success',
+        cancel_url: 'https://ramses.pro/payments/cancel'
     })
     return res.json(sessionStandar)
 }
@@ -149,8 +155,8 @@ const createPremium = async (req, res = response) => {
             }
         ],
         mode: 'payment',
-        success_url: 'http://localhost:4600/payments/success',
-        cancel_url: 'http://localhost:4600/payments/cancel'
+        success_url: 'https://ramses.pro/payments/success',
+        cancel_url: 'https://ramses.pro/payments/cancel'
     })
     res.json(sessionPremium)
 }
