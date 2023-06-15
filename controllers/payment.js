@@ -1,5 +1,5 @@
 const {response} = require('express');
-const request = require('request');
+
 require('dotenv').config();
 const {STRIPE_PRIVATE_KEY} = require('../config');
 const { Stripe } =  require('stripe');
@@ -72,7 +72,7 @@ const createSession = async (req, res = response) => {
             {
                 price_data: {
                     product_data: {
-                        name: 'Paquete basico',
+                        name: 'Paquete landingpage',
                         description: '1 sección, Dominio gratis, Enlaces a redes sociales, Icono flotante WhatsApp, Entrega de 1 a 2 días'
                     },
                     currency: 'mxn',
@@ -87,6 +87,72 @@ const createSession = async (req, res = response) => {
     })
 
     return res.json(session)
+}
+
+const createBasico = async (req, res = response) => {
+    const sessionBasico = await stripe.checkout.sessions.create({
+        line_items: [
+            {
+                price_data: {
+                    product_data: {
+                        name: 'paquete básico',
+                        description: 'hasta 3 secciones, contenido SEO, animaciones css, código fuente, respaldos, entrega de 2 a 3 días'
+                    },
+                    currency: 'mxn',
+                    unit_amount: 348000
+                },
+                quantity: 1
+            }
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:4600/payments/success',
+        cancel_url: 'http://localhost:4600/payments/cancel'
+    })
+    return res.json(sessionBasico);
+}
+
+const createStandar = async (req, res = response) => {
+    const sessionStandar = await stripe.checkout.sessions.create({
+        line_items: [
+            {
+                price_data: {
+                    product_data: {
+                        name: 'paquete estándar',
+                        description: 'hasta 5 secciones, esctructura escalable, componentes especializados, cambiar css de forma dinamica, integracion con google analytics, entrega de 4 a 6 días'
+                    },
+                    currency: 'mxn',
+                    unit_amount: 580000
+                },
+                quantity: 1
+            }
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:4600/payments/success',
+        cancel_url: 'http://localhost:4600/payments/cancel'
+    })
+    return res.json(sessionStandar)
+}
+
+const createPremium = async (req, res = response) => {
+    const sessionPremium = await stripe.checkout.sessions.create({
+        line_items: [
+            {
+                price_data: {
+                    product_data: {
+                        name: 'paquete premium',
+                        description: 'hasta 10 secciones, rutas hijas, diseño personalizado, 2horas/mes incluidas, integracion a google analytics, entrega de 6 a 10 días'
+                    },
+                    currency: 'mxn',
+                    unit_amount: 928000
+                },
+                quantity: 1
+            }
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:4600/payments/success',
+        cancel_url: 'http://localhost:4600/payments/cancel'
+    })
+    res.json(sessionPremium)
 }
 
 const captureOrder = async (req, res = response) => {
@@ -104,4 +170,7 @@ module.exports = {
     captureOrder,
     cancelOrder,
     createSession,
+    createBasico,
+    createStandar,
+    createPremium
 }
